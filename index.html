@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaska Ultimate ERP</title>
+    <title>Chaska Pro | QR & Table Manager</title>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f3f4f6; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
         .sidebar { width: 260px; background: #1e293b; height: 100vh; position: fixed; padding: 25px; color: white; }
         .main { margin-left: 260px; padding: 30px; }
-        .nav-link { display: flex; items: center; gap: 12px; padding: 12px; border-radius: 10px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; color: #94a3b8; }
-        .nav-link.active { background: #4f46e5; color: white; }
-        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-link { display: flex; items: center; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-weight: 600; }
+        .nav-link.active { background: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .card { background: white; border-radius: 24px; padding: 24px; border: 1px solid #e2e8f0; }
         .tab-panel { display: none; }
         .tab-active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -24,72 +25,62 @@
 <body>
 
     <aside class="sidebar">
-        <h1 class="text-xl font-800 mb-10 text-center tracking-tighter">CHASKA <span class="text-indigo-400">ERP</span></h1>
+        <div class="mb-10 text-center"><h1 class="text-xl font-800 tracking-tighter italic text-white">CHASKA <span class="text-indigo-400">QR</span></h1></div>
         <nav>
-            <div onclick="showTab('pos')" id="btn-pos" class="nav-link active"><i class="fa-solid fa-cash-register"></i> Take Order (POS)</div>
-            <div onclick="showTab('kot')" id="btn-kot" class="nav-link"><i class="fa-solid fa-fire"></i> Kitchen (KOT)</div>
-            <div onclick="showTab('menu')" id="btn-menu" class="nav-link"><i class="fa-solid fa-utensils"></i> Manage Menu</div>
-            <div onclick="showTab('exp')" id="btn-exp" class="nav-link"><i class="fa-solid fa-wallet"></i> Add Expenses</div>
-            <div onclick="showTab('qr')" id="btn-qr" class="nav-link"><i class="fa-solid fa-qrcode"></i> Table QR Codes</div>
+            <div onclick="showTab('tables')" id="btn-tables" class="nav-link active"><i class="fa-solid fa-border-all"></i> Table Manager</div>
+            <div onclick="showTab('qr-gen')" id="btn-qr-gen" class="nav-link"><i class="fa-solid fa-qrcode"></i> QR Management</div>
+            <div onclick="showTab('menu')" id="btn-menu" class="nav-link"><i class="fa-solid fa-utensils"></i> Menu & Rates</div>
+            <div onclick="showTab('exp')" id="btn-exp" class="nav-link"><i class="fa-solid fa-wallet"></i> Expenses</div>
         </nav>
     </aside>
 
     <main class="main">
         
-        <section id="pos" class="tab-panel tab-active">
-            <h2 class="text-2xl font-800 mb-6">New Order & Billing</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section id="tables" class="tab-panel tab-active">
+            <h2 class="text-2xl font-800 mb-8">Floor Live View</h2>
+            <div id="table-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        </section>
+
+        <section id="qr-gen" class="tab-panel">
+            <h2 class="text-2xl font-800 mb-8">Generate & Print QR Codes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="card">
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <input type="text" id="cust-name" placeholder="Customer Name" class="p-3 bg-gray-50 rounded-xl outline-none border">
-                        <select id="table-select" class="p-3 bg-gray-50 rounded-xl outline-none border">
-                            <option value="Table 1">Table 1</option><option value="Table 2">Table 2</option>
-                            <option value="Table 3">Table 3</option><option value="Table 4">Table 4</option>
-                        </select>
-                    </div>
-                    <div id="menu-items-grid" class="grid grid-cols-2 gap-2 mb-6 max-h-60 overflow-y-auto p-2">
-                        </div>
-                    <div class="border-t pt-4">
-                        <h4 class="font-bold">Total: ₹<span id="order-total">0</span></h4>
-                        <button onclick="placeOrder()" class="w-full bg-indigo-600 text-white py-4 rounded-xl mt-4 font-800">GENERATE KOT & BILL</button>
-                    </div>
+                    <h3 class="font-bold mb-4">Add New Table</h3>
+                    <input type="text" id="new-table-name" placeholder="Table Name (e.g. Table 1)" class="w-full p-4 bg-slate-50 border rounded-xl mb-4 outline-none">
+                    <button onclick="addTable()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-800">Add & Generate QR</button>
                 </div>
-                <div class="card">
-                    <h4 class="font-bold mb-4 uppercase text-gray-400 text-xs">Selected Items</h4>
-                    <div id="cart-list" class="space-y-2"></div>
+                <div class="card bg-slate-900 text-white">
+                    <h3 class="font-bold mb-2">QR Auto-Generator</h3>
+                    <p class="text-[10px] text-slate-400 mb-4">Neeche diye gaye QR codes real time mein banenge jab aap naya table add karoge.</p>
                 </div>
             </div>
+            <div id="qr-list" class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="menu" class="tab-panel">
-            <div class="card max-w-lg mx-auto">
-                <h2 class="text-xl font-800 mb-6">Add New Dish to Menu</h2>
-                <input type="text" id="item-name" placeholder="Dish Name (e.g. Paneer Pizza)" class="w-full p-3 bg-gray-50 rounded-xl mb-3 border">
-                <input type="number" id="item-price" placeholder="Rate (₹)" class="w-full p-3 bg-gray-50 rounded-xl mb-6 border font-bold text-indigo-600">
-                <button onclick="addMenuItem()" class="w-full bg-green-500 text-white py-3 rounded-xl font-800">ADD TO MENU</button>
+            <div class="max-w-2xl mx-auto">
+                <div class="card mb-8">
+                    <h2 class="text-xl font-800 mb-6">Add/Edit Menu Item</h2>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="m-item" placeholder="Dish Name" class="p-4 bg-slate-50 border rounded-xl outline-none">
+                        <input type="number" id="m-rate" placeholder="Rate (₹)" class="p-4 bg-slate-50 border rounded-xl outline-none font-bold">
+                    </div>
+                    <button onclick="saveMenu()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-800">Save Item</button>
+                </div>
+                <div id="current-menu" class="card">
+                    <h3 class="font-bold mb-4 uppercase text-xs text-slate-400 tracking-widest">Active Menu</h3>
+                    <div id="menu-items-list" class="space-y-2"></div>
+                </div>
             </div>
         </section>
 
         <section id="exp" class="tab-panel">
-            <div class="card max-w-lg mx-auto">
-                <h2 class="text-xl font-800 mb-6">Add Daily Expense</h2>
-                <input type="text" id="exp-reason" placeholder="Kyun kharch hua? (e.g. Dhoodh/Milk)" class="w-full p-3 bg-gray-50 rounded-xl mb-3 border">
-                <input type="number" id="exp-amount" placeholder="Amount (₹)" class="w-full p-3 bg-gray-50 rounded-xl mb-6 border font-bold text-red-500">
-                <button onclick="saveExpense()" class="w-full bg-red-500 text-white py-3 rounded-xl font-800">SAVE KHARCHA</button>
+            <div class="max-w-xl mx-auto card text-center">
+                <h2 class="text-xl font-800 mb-8">Business Expenses</h2>
+                <input type="text" id="ex-title" placeholder="Expense Name" class="w-full p-4 bg-slate-50 border rounded-xl mb-3 outline-none">
+                <input type="number" id="ex-price" placeholder="Amount (₹)" class="w-full p-4 bg-slate-50 border rounded-xl mb-6 outline-none font-bold text-red-500">
+                <button onclick="saveExp()" class="w-full bg-red-500 text-white py-4 rounded-xl font-800">Record Expense</button>
             </div>
-        </section>
-
-        <section id="qr" class="tab-panel">
-            <h2 class="text-2xl font-800 mb-6">Table QR Generator</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="card text-center"><i class="fa-solid fa-qrcode text-4xl mb-2"></i><p class="font-bold">Table 1</p><button class="text-xs text-blue-500 mt-2">Print QR</button></div>
-                <div class="card text-center"><i class="fa-solid fa-qrcode text-4xl mb-2"></i><p class="font-bold">Table 2</p><button class="text-xs text-blue-500 mt-2">Print QR</button></div>
-            </div>
-        </section>
-
-        <section id="kot" class="tab-panel">
-            <h2 class="text-2xl font-800 mb-8">Kitchen Display Stream</h2>
-            <div id="kot-display" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
     </main>
@@ -106,90 +97,87 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        let cart = [];
 
         function showTab(id) {
             document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('tab-active'));
-            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('tab-active');
             document.getElementById('btn-'+id).classList.add('active');
         }
 
+        // TABLE & QR LOGIC
+        function addTable() {
+            const name = document.getElementById('new-table-name').value;
+            if(name) { db.ref('tables').push({name: name, status: 'Free'}); document.getElementById('new-table-name').value = ''; }
+        }
+
+        db.ref('tables').on('value', snap => {
+            const grid = document.getElementById('table-grid');
+            const qrList = document.getElementById('qr-list');
+            grid.innerHTML = ''; qrList.innerHTML = '';
+            
+            // YAHAN APNI MENU WALI WEBSITE KA LINK DAALNA HAI
+            const baseURL = "https://chaska-menu.web.app/menu.html"; 
+
+            snap.forEach(c => {
+                const t = c.val();
+                const tableId = c.key;
+                const isBusy = t.status === 'Busy';
+                
+                grid.innerHTML += `
+                    <div class="card text-center border-b-4 ${isBusy?'border-amber-500 bg-amber-50':'border-emerald-500'}">
+                        <i class="fa-solid fa-couch text-2xl mb-2 ${isBusy?'text-amber-500':'text-emerald-500'}"></i>
+                        <p class="font-800 text-sm uppercase">${t.name}</p>
+                    </div>`;
+                
+                // QR Box HTML
+                qrList.innerHTML += `
+                    <div class="card flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-sm mb-1">${t.name}</p>
+                            <a href="${baseURL}?table=${encodeURIComponent(t.name)}" target="_blank" class="text-[10px] text-blue-500 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100">Check Link</a>
+                        </div>
+                        <div id="qr-${tableId}" class="p-2 bg-white border border-slate-200 rounded-xl"></div>
+                    </div>`;
+            });
+
+            // Asli QR Draw Karna
+            snap.forEach(c => {
+                const t = c.val();
+                const tableId = c.key;
+                const menuLink = `${baseURL}?table=${encodeURIComponent(t.name)}`;
+                
+                new QRCode(document.getElementById(`qr-${tableId}`), {
+                    text: menuLink,
+                    width: 80,
+                    height: 80,
+                    colorDark : "#1e293b",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            });
+        });
+
         // MENU LOGIC
-        function addMenuItem() {
-            const n = document.getElementById('item-name').value;
-            const p = document.getElementById('item-price').value;
-            if(n && p) { db.ref('menu').push({name:n, price:p}); alert("Dish Added!"); }
+        function saveMenu() {
+            const n = document.getElementById('m-item').value, r = document.getElementById('m-rate').value;
+            if(n && r) { db.ref('menu').push({name:n, price:r}); alert("Menu Updated!"); }
         }
 
         db.ref('menu').on('value', snap => {
-            const grid = document.getElementById('menu-items-grid');
-            grid.innerHTML = '';
+            const list = document.getElementById('menu-items-list');
+            list.innerHTML = '';
             snap.forEach(c => {
-                const item = c.val();
-                grid.innerHTML += `<button onclick="addToCart('${item.name}', ${item.price})" class="p-3 bg-white border rounded-xl text-xs font-bold hover:bg-indigo-50">${item.name}<br>₹${item.price}</button>`;
+                const i = c.val();
+                list.innerHTML += `<div class="flex justify-between p-3 bg-slate-50 rounded-xl text-xs font-bold border border-slate-100"><span>${i.name}</span><span class="text-indigo-600">₹${i.price}</span></div>`;
             });
         });
-
-        // ORDER LOGIC
-        function addToCart(name, price) {
-            cart.push({name, price});
-            renderCart();
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cart-list');
-            let total = 0;
-            list.innerHTML = '';
-            cart.forEach(i => {
-                total += Number(i.price);
-                list.innerHTML += `<div class="flex justify-between text-sm font-bold p-2 bg-gray-50 rounded"><span>${i.name}</span><span>₹${i.price}</span></div>`;
-            });
-            document.getElementById('order-total').innerText = total;
-        }
-
-        function placeOrder() {
-            const name = document.getElementById('cust-name').value || "Guest";
-            const table = document.getElementById('table-select').value;
-            const total = document.getElementById('order-total').innerText;
-            const items = cart.map(i => i.name).join(', ');
-            
-            if(cart.length > 0) {
-                db.ref('orders').push({
-                    customer_name: name,
-                    table_no: table,
-                    bill_amount: total,
-                    items: items,
-                    status: 'Pending',
-                    timestamp: Date.now()
-                });
-                cart = []; renderCart(); alert("KOT Generated!");
-            }
-        }
 
         // EXPENSE LOGIC
-        function saveExpense() {
-            const r = document.getElementById('exp-reason').value;
-            const a = document.getElementById('exp-amount').value;
-            if(r && a) { db.ref('expenses').push({reason:r, amount:a, date:Date.now()}); alert("Expense Saved!"); }
+        function saveExp() {
+            const t = document.getElementById('ex-title').value, p = document.getElementById('ex-price').value;
+            if(t && p) db.ref('expenses').push({title:t, price:p, date:Date.now()});
         }
-
-        // KOT LOGIC
-        db.ref('orders').on('value', snap => {
-            const k = document.getElementById('kot-display');
-            k.innerHTML = '';
-            snap.forEach(c => {
-                const o = c.val();
-                if(o.status === 'Pending') {
-                    k.innerHTML = `
-                    <div class="card border-t-4 border-indigo-600">
-                        <div class="flex justify-between mb-2"><span class="font-800 text-xs">${o.table_no}</span><span class="text-[10px] text-gray-400">${new Date(o.timestamp).toLocaleTimeString()}</span></div>
-                        <h4 class="font-bold text-sm">${o.items}</h4>
-                        <button onclick="db.ref('orders/${c.key}').update({status:'Served'})" class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg text-xs font-bold">MARK DONE</button>
-                    </div>` + k.innerHTML;
-                }
-            });
-        });
     </script>
 </body>
 </html>
