@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaska Pro | QR & Table Manager</title>
+    <title>Chaska Admin | KOT & QR Center</title>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -11,75 +11,71 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
-        .sidebar { width: 260px; background: #1e293b; height: 100vh; position: fixed; padding: 25px; color: white; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f1f5f9; }
+        .sidebar { width: 260px; background: #0f172a; height: 100vh; position: fixed; padding: 25px; color: white; }
         .main { margin-left: 260px; padding: 30px; }
-        .nav-link { display: flex; items: center; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-weight: 600; }
-        .nav-link.active { background: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .nav-link { display: flex; items: center; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 5px; cursor: pointer; color: #94a3b8; font-weight: 600; transition: 0.3s; }
+        .nav-link.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
         .card { background: white; border-radius: 24px; padding: 24px; border: 1px solid #e2e8f0; }
         .tab-panel { display: none; }
         .tab-active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="mb-10 text-center"><h1 class="text-xl font-800 tracking-tighter italic text-white">CHASKA <span class="text-indigo-400">QR</span></h1></div>
+        <div class="mb-10 px-2"><h1 class="text-xl font-800 tracking-tighter italic">CHASKA <span class="text-indigo-400">PRO</span></h1></div>
         <nav>
-            <div onclick="showTab('tables')" id="btn-tables" class="nav-link active"><i class="fa-solid fa-border-all"></i> Table Manager</div>
-            <div onclick="showTab('qr-gen')" id="btn-qr-gen" class="nav-link"><i class="fa-solid fa-qrcode"></i> QR Management</div>
-            <div onclick="showTab('menu')" id="btn-menu" class="nav-link"><i class="fa-solid fa-utensils"></i> Menu & Rates</div>
+            <div onclick="showTab('kot')" id="btn-kot" class="nav-link active"><i class="fa-solid fa-fire-burner"></i> Live KOT Orders</div>
+            <div onclick="showTab('qr-gen')" id="btn-qr-gen" class="nav-link"><i class="fa-solid fa-qrcode"></i> Table & QR</div>
+            <div onclick="showTab('menu')" id="btn-menu" class="nav-link"><i class="fa-solid fa-list"></i> Menu Master</div>
             <div onclick="showTab('exp')" id="btn-exp" class="nav-link"><i class="fa-solid fa-wallet"></i> Expenses</div>
         </nav>
     </aside>
 
     <main class="main">
         
-        <section id="tables" class="tab-panel tab-active">
-            <h2 class="text-2xl font-800 mb-8">Floor Live View</h2>
-            <div id="table-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        <section id="kot" class="tab-panel tab-active">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-800">Kitchen Display (KOT)</h2>
+                <span class="bg-emerald-100 text-emerald-600 px-4 py-1 rounded-full text-xs font-bold">LIVE SYNC ON</span>
+            </div>
+            <div id="kot-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="qr-gen" class="tab-panel">
-            <h2 class="text-2xl font-800 mb-8">Generate & Print QR Codes</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card">
+            <h2 class="text-2xl font-800 mb-8">Tables & QR Management</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="card lg:col-span-1">
                     <h3 class="font-bold mb-4">Add New Table</h3>
-                    <input type="text" id="new-table-name" placeholder="Table Name (e.g. Table 1)" class="w-full p-4 bg-slate-50 border rounded-xl mb-4 outline-none">
-                    <button onclick="addTable()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-800">Add & Generate QR</button>
+                    <input type="text" id="new-table-name" placeholder="Table Name (e.g. Table 1)" class="w-full p-4 bg-slate-50 border rounded-xl mb-4 outline-none focus:border-indigo-500">
+                    <button onclick="addTable()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-800">Generate QR</button>
                 </div>
-                <div class="card bg-slate-900 text-white">
-                    <h3 class="font-bold mb-2">QR Auto-Generator</h3>
-                    <p class="text-[10px] text-slate-400 mb-4">Neeche diye gaye QR codes real time mein banenge jab aap naya table add karoge.</p>
+                <div class="lg:col-span-2">
+                    <div id="qr-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
             </div>
-            <div id="qr-list" class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="menu" class="tab-panel">
-            <div class="max-w-2xl mx-auto">
-                <div class="card mb-8">
-                    <h2 class="text-xl font-800 mb-6">Add/Edit Menu Item</h2>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <input type="text" id="m-item" placeholder="Dish Name" class="p-4 bg-slate-50 border rounded-xl outline-none">
-                        <input type="number" id="m-rate" placeholder="Rate (₹)" class="p-4 bg-slate-50 border rounded-xl outline-none font-bold">
-                    </div>
-                    <button onclick="saveMenu()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-800">Save Item</button>
+            <div class="max-w-xl mx-auto card">
+                <h2 class="text-xl font-800 mb-6">Menu & Rates</h2>
+                <div class="space-y-4 mb-8">
+                    <input type="text" id="m-item" placeholder="Item Name" class="w-full p-4 bg-slate-50 border rounded-xl outline-none">
+                    <input type="number" id="m-rate" placeholder="Price (₹)" class="w-full p-4 bg-slate-50 border rounded-xl outline-none font-bold text-indigo-600">
+                    <button onclick="saveMenu()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-800">Add to Menu</button>
                 </div>
-                <div id="current-menu" class="card">
-                    <h3 class="font-bold mb-4 uppercase text-xs text-slate-400 tracking-widest">Active Menu</h3>
-                    <div id="menu-items-list" class="space-y-2"></div>
-                </div>
+                <div id="menu-items-list" class="space-y-2 border-t pt-6"></div>
             </div>
         </section>
 
         <section id="exp" class="tab-panel">
             <div class="max-w-xl mx-auto card text-center">
-                <h2 class="text-xl font-800 mb-8">Business Expenses</h2>
-                <input type="text" id="ex-title" placeholder="Expense Name" class="w-full p-4 bg-slate-50 border rounded-xl mb-3 outline-none">
+                <h2 class="text-xl font-800 mb-8">Daily Expenses</h2>
+                <input type="text" id="ex-title" placeholder="Expense Title" class="w-full p-4 bg-slate-50 border rounded-xl mb-3 outline-none">
                 <input type="number" id="ex-price" placeholder="Amount (₹)" class="w-full p-4 bg-slate-50 border rounded-xl mb-6 outline-none font-bold text-red-500">
-                <button onclick="saveExp()" class="w-full bg-red-500 text-white py-4 rounded-xl font-800">Record Expense</button>
+                <button onclick="saveExp()" class="w-full bg-rose-500 text-white py-4 rounded-xl font-800">Save Expense</button>
             </div>
         </section>
 
@@ -105,75 +101,81 @@
             document.getElementById('btn-'+id).classList.add('active');
         }
 
-        // TABLE & QR LOGIC
+        // --- SMART LINK LOGIC ---
+        // Ye line apne aap menu.html ka rasta dhoond legi
+        const baseURL = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/menu.html";
+
+        // --- KOT LOGIC ---
+        db.ref('orders').on('value', snap => {
+            const kotContainer = document.getElementById('kot-list');
+            kotContainer.innerHTML = '';
+            snap.forEach(c => {
+                const o = c.val();
+                if(o.status === 'KOT') {
+                    kotContainer.innerHTML = `
+                    <div class="card border-l-8 border-indigo-500 shadow-md">
+                        <div class="flex justify-between mb-4">
+                            <span class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-xs font-800 uppercase">${o.table_no}</span>
+                            <span class="text-[10px] text-slate-400 font-bold">${new Date(o.timestamp).toLocaleTimeString()}</span>
+                        </div>
+                        <p class="text-slate-800 font-bold text-lg mb-6">${o.items}</p>
+                        <div class="flex gap-2">
+                            <button onclick="completeOrder('${c.key}')" class="flex-1 bg-emerald-500 text-white py-3 rounded-xl text-xs font-800 uppercase">Served</button>
+                            <button onclick="deleteOrder('${c.key}')" class="bg-slate-100 text-slate-400 px-4 rounded-xl hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>` + kotContainer.innerHTML;
+                }
+            });
+        });
+
+        function completeOrder(id) { db.ref('orders/' + id).update({status: 'Served'}); }
+        function deleteOrder(id) { if(confirm("Order Delete Karein?")) db.ref('orders/' + id).remove(); }
+
+        // --- QR LOGIC ---
         function addTable() {
             const name = document.getElementById('new-table-name').value;
             if(name) { db.ref('tables').push({name: name, status: 'Free'}); document.getElementById('new-table-name').value = ''; }
         }
 
         db.ref('tables').on('value', snap => {
-            const grid = document.getElementById('table-grid');
             const qrList = document.getElementById('qr-list');
-            grid.innerHTML = ''; qrList.innerHTML = '';
-            
-            // YAHAN APNI MENU WALI WEBSITE KA LINK DAALNA HAI
-            const baseURL = "https://chaska-menu.web.app/menu.html"; 
-
+            qrList.innerHTML = '';
             snap.forEach(c => {
                 const t = c.val();
                 const tableId = c.key;
-                const isBusy = t.status === 'Busy';
-                
-                grid.innerHTML += `
-                    <div class="card text-center border-b-4 ${isBusy?'border-amber-500 bg-amber-50':'border-emerald-500'}">
-                        <i class="fa-solid fa-couch text-2xl mb-2 ${isBusy?'text-amber-500':'text-emerald-500'}"></i>
-                        <p class="font-800 text-sm uppercase">${t.name}</p>
-                    </div>`;
-                
-                // QR Box HTML
                 qrList.innerHTML += `
-                    <div class="card flex items-center justify-between">
+                    <div class="card flex items-center justify-between p-4">
                         <div>
-                            <p class="font-bold text-sm mb-1">${t.name}</p>
-                            <a href="${baseURL}?table=${encodeURIComponent(t.name)}" target="_blank" class="text-[10px] text-blue-500 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100">Check Link</a>
+                            <p class="font-800 text-slate-800">${t.name}</p>
+                            <button onclick="window.open('${baseURL}?table=${encodeURIComponent(t.name)}')" class="text-[10px] text-indigo-500 font-bold mt-1 uppercase hover:underline">Open Menu</button>
                         </div>
-                        <div id="qr-${tableId}" class="p-2 bg-white border border-slate-200 rounded-xl"></div>
+                        <div id="qr-${tableId}" class="bg-white p-1 border rounded-lg"></div>
                     </div>`;
             });
 
-            // Asli QR Draw Karna
             snap.forEach(c => {
                 const t = c.val();
                 const tableId = c.key;
-                const menuLink = `${baseURL}?table=${encodeURIComponent(t.name)}`;
-                
                 new QRCode(document.getElementById(`qr-${tableId}`), {
-                    text: menuLink,
-                    width: 80,
-                    height: 80,
-                    colorDark : "#1e293b",
-                    colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H
+                    text: `${baseURL}?table=${encodeURIComponent(t.name)}`,
+                    width: 60, height: 60, colorDark : "#0f172a"
                 });
             });
         });
 
-        // MENU LOGIC
+        // --- MENU & EXPENSE ---
         function saveMenu() {
             const n = document.getElementById('m-item').value, r = document.getElementById('m-rate').value;
-            if(n && r) { db.ref('menu').push({name:n, price:r}); alert("Menu Updated!"); }
+            if(n && r) db.ref('menu').push({name:n, price:r});
         }
-
         db.ref('menu').on('value', snap => {
             const list = document.getElementById('menu-items-list');
             list.innerHTML = '';
             snap.forEach(c => {
                 const i = c.val();
-                list.innerHTML += `<div class="flex justify-between p-3 bg-slate-50 rounded-xl text-xs font-bold border border-slate-100"><span>${i.name}</span><span class="text-indigo-600">₹${i.price}</span></div>`;
+                list.innerHTML += `<div class="flex justify-between p-4 bg-slate-50 rounded-2xl text-sm font-bold border border-slate-100 mb-2"><span>${i.name}</span><span class="text-indigo-600">₹${i.price}</span></div>`;
             });
         });
-
-        // EXPENSE LOGIC
         function saveExp() {
             const t = document.getElementById('ex-title').value, p = document.getElementById('ex-price').value;
             if(t && p) db.ref('expenses').push({title:t, price:p, date:Date.now()});
