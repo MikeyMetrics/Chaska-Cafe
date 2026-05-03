@@ -1,60 +1,102 @@
-<div class="p-4">
-    <h2 class="text-xl font-black text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">CHASKA SPECIALS 📋</h2>
-    
-    <div class="space-y-4">
-        <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🏺</span>
-                <div>
-                    <h3 class="font-bold">Kulhad Pizza</h3>
-                    <p class="text-orange-600 font-bold text-sm">₹149</p>
-                </div>
-            </div>
-            <button onclick="addToCart('Kulhad Pizza', 149)" class="border-2 border-green-500 text-green-600 px-5 py-1 rounded-xl font-black text-xs uppercase">Add</button>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glorious Public School, Maheshra</title>
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .hero-text { animation: fadeInDown 1.5s ease-out; }
+        .welcome-screen {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
 
-        <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🍔</span>
-                <div>
-                    <h3 class="font-bold">Cheese Burger</h3>
-                    <p class="text-orange-600 font-bold text-sm">₹89</p>
-                </div>
-            </div>
-            <button onclick="addToCart('Cheese Burger', 89)" class="border-2 border-green-500 text-green-600 px-5 py-1 rounded-xl font-black text-xs uppercase">Add</button>
+    <!-- 1. FULL SCREEN WELCOME SECTION -->
+    <section class="welcome-screen h-screen flex items-center justify-center text-center text-white p-5">
+        <div class="hero-text">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4">Welcome to <br><span class="text-yellow-400">Glorious Public School</span></h1>
+            <p class="text-xl md:text-2xl mb-8">Maheshra, Hazaribagh (Established 1999)</p>
+            <a href="#about" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded-full transition duration-300">Explore Our School</a>
         </div>
+    </section>
 
-        <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🍜</span>
-                <div>
-                    <h3 class="font-bold">Peri Peri Maggi</h3>
-                    <p class="text-orange-600 font-bold text-sm">₹70</p>
+    <!-- 2. ABOUT SECTION (With Animation) -->
+    <section id="about" class="py-20 px-5 md:px-20 bg-white">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">About Our School</h2>
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div data-aos="fade-right">
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        Glorious Public School, Maheshra was established in 1999 and is managed by the <strong>Vidhan Welfare Society</strong>. Located in the serene rural area of Daru block, Hazaribagh, we provide a perfect environment for learning.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        We offer classes from <strong>Nursery to Std. 10</strong>. As a co-educational residential school, we focus on all-round development with English as our primary medium of instruction.
+                    </p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="https://www.facebook.com/share/1EChkKWwu4/" target="_blank" class="text-blue-600 text-3xl hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
+                        <a href="https://instagram.com/gpsmahera" target="_blank" class="text-pink-600 text-3xl hover:scale-110 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-red-600 text-3xl hover:scale-110 transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-8 rounded-2xl shadow-xl" data-aos="zoom-in">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-800 underline">School Highlights</h3>
+                    <ul class="space-y-3">
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i> 16 Modern Classrooms</li>
+                        <li><i class="fas fa-desktop text-blue-500 mr-2"></i> 86-inch AI Smartboards</li>
+                        <li><i class="fas fa-wifi text-yellow-500 mr-2"></i> Full Wi-Fi & Electricity</li>
+                        <li><i class="fas fa-book text-purple-500 mr-2"></i> Library with 1,065+ Books</li>
+                        <li><i class="fas fa-bus text-red-500 mr-2"></i> Easily Accessible (NH 522)</li>
+                    </ul>
                 </div>
             </div>
-            <button onclick="addToCart('Peri Peri Maggi', 70)" class="border-2 border-green-500 text-green-600 px-5 py-1 rounded-xl font-black text-xs uppercase">Add</button>
         </div>
+    </section>
 
-        <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🥤</span>
-                <div>
-                    <h3 class="font-bold">Cold Coffee (Extra Ice Cream)</h3>
-                    <p class="text-orange-600 font-bold text-sm">₹120</p>
+    <!-- 3. CONNECT / CONTACT SECTION -->
+    <section id="contact" class="py-20 bg-blue-900 text-white px-5">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8" data-aos="fade-down">Connect With Us</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-6 border border-blue-700 rounded-lg" data-aos="flip-left">
+                    <i class="fas fa-map-marker-alt text-4xl mb-4 text-yellow-400"></i>
+                    <h4 class="text-xl font-bold mb-2">Location</h4>
+                    <p>Maheshra, Daru Block, Hazaribagh, Jharkhand (NH 522)</p>
+                </div>
+                <div class="p-6 border border-blue-700 rounded-lg" data-aos="flip-up">
+                    <i class="fas fa-phone-alt text-4xl mb-4 text-yellow-400"></i>
+                    <h4 class="text-xl font-bold mb-2">Call Us</h4>
+                    <p>Contact Office for Admissions</p>
+                </div>
+                <div class="p-6 border border-blue-700 rounded-lg" data-aos="flip-right">
+                    <i class="fas fa-envelope text-4xl mb-4 text-yellow-400"></i>
+                    <h4 class="text-xl font-bold mb-2">Social Media</h4>
+                    <p>Follow @gpsmahera on Instagram</p>
                 </div>
             </div>
-            <button onclick="addToCart('Cold Coffee', 120)" class="border-2 border-green-500 text-green-600 px-5 py-1 rounded-xl font-black text-xs uppercase">Add</button>
+            <button class="mt-12 bg-white text-blue-900 font-bold py-3 px-10 rounded-full hover:bg-yellow-400 transition">Apply Now</button>
         </div>
+    </section>
 
-        <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">☕</span>
-                <div>
-                    <h3 class="font-bold">Chaska Special Chai</h3>
-                    <p class="text-orange-600 font-bold text-sm">₹20</p>
-                </div>
-            </div>
-            <button onclick="addToCart('Special Chai', 20)" class="border-2 border-green-500 text-green-600 px-5 py-1 rounded-xl font-black text-xs uppercase">Add</button>
-        </div>
-    </div>
-</div>
+    <footer class="bg-gray-900 text-gray-500 py-6 text-center">
+        <p>&copy; 2026 Glorious Public School. Designed with Excellence.</p>
+    </footer>
+
+    <!-- AOS Script for Animations -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+</html>
