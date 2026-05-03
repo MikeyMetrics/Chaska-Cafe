@@ -3,100 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glorious Public School, Maheshra</title>
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <title>Glorious Public School | Mahesra</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @keyframes fadeInDown {
-            0% { opacity: 0; transform: translateY(-50px); }
-            100% { opacity: 1; transform: translateY(0); }
+        /* PREMIUM INTRO ANIMATION */
+        #intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 6s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
         }
-        .hero-text { animation: fadeInDown 1.5s ease-out; }
-        .welcome-screen {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+
+        .intro-text {
+            color: white;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: none;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .slide-up {
+            transform: translateY(-100%);
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        /* SLIDER ANIMATION */
+        .slider-img {
+            display: none; width: 100%; height: 500px; object-fit: cover;
+        }
+        .active { display: block; animation: zoomEffect 10s infinite alternate; }
+        
+        @keyframes zoomEffect {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .nav-btn:hover { border-bottom: 3px solid #facc15; color: #facc15; }
     </style>
 </head>
 <body class="bg-gray-50 overflow-x-hidden">
 
-    <!-- 1. FULL SCREEN WELCOME SECTION -->
-    <section class="welcome-screen h-screen flex items-center justify-center text-center text-white p-5">
-        <div class="hero-text">
-            <h1 class="text-5xl md:text-7xl font-bold mb-4">Welcome to <br><span class="text-yellow-400">Glorious Public School</span></h1>
-            <p class="text-xl md:text-2xl mb-8">Maheshra, Hazaribagh (Established 1999)</p>
-            <a href="#about" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded-full transition duration-300">Explore Our School</a>
+    <!-- 1. INTRO SCREEN -->
+    <div id="intro-overlay">
+        <div id="text1" class="intro-text animate__animated animate__zoomIn">Welcome</div>
+        <div id="text2" class="intro-text animate__animated animate__fadeInUp" style="color: #facc15;">
+            Glorious Public School
         </div>
-    </section>
+    </div>
 
-    <!-- 2. ABOUT SECTION (With Animation) -->
-    <section id="about" class="py-20 px-5 md:px-20 bg-white">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">About Our School</h2>
-            <div class="grid md:grid-cols-2 gap-10 items-center">
-                <div data-aos="fade-right">
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        Glorious Public School, Maheshra was established in 1999 and is managed by the <strong>Vidhan Welfare Society</strong>. Located in the serene rural area of Daru block, Hazaribagh, we provide a perfect environment for learning.
-                    </p>
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        We offer classes from <strong>Nursery to Std. 10</strong>. As a co-educational residential school, we focus on all-round development with English as our primary medium of instruction.
-                    </p>
-                    <div class="flex space-x-4 mt-6">
-                        <a href="https://www.facebook.com/share/1EChkKWwu4/" target="_blank" class="text-blue-600 text-3xl hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
-                        <a href="https://instagram.com/gpsmahera" target="_blank" class="text-pink-600 text-3xl hover:scale-110 transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-red-600 text-3xl hover:scale-110 transition"><i class="fab fa-youtube"></i></a>
+    <!-- 2. HEADER SECTION (Logo & Name) -->
+    <header class="bg-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <!-- SCHOOL LOGO INTEGRATED -->
+                <img src="https://i.ibb.co/8Dq9kJMd/school-logo.png" alt="GPS Logo" class="w-16 h-16 md:w-20 md:h-20 object-contain animate__animated animate__bounceIn">
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black text-blue-900 tracking-tighter">GLORIOUS PUBLIC SCHOOL</h1>
+                    <p class="text-blue-600 font-bold text-xs tracking-[0.2em]">MAHESRA, HAZARIBAG</p>
+                </div>
+            </div>
+            <!-- SOCIAL BUTTONS -->
+            <div class="hidden md:flex space-x-3">
+                <a href="https://instagram.com/gpsmaheshra" class="bg-pink-600 p-2 rounded-full text-white hover:scale-110 transition">Insta</a>
+                <a href="#" class="bg-blue-800 p-2 rounded-full text-white hover:scale-110 transition">Fb</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. NAVIGATION MENU -->
+    <nav class="bg-blue-950 py-3 shadow-lg">
+        <div class="container mx-auto flex flex-wrap justify-center gap-4 md:gap-8 px-4">
+            <button onclick="showSec('home')" class="nav-btn text-white font-bold transition uppercase">Home</button>
+            <button onclick="showSec('about')" class="nav-btn text-white font-bold transition uppercase">About Us</button>
+            <button onclick="showSec('why')" class="nav-btn text-white font-bold transition uppercase">Why Glorious?</button>
+            <button onclick="showSec('admission')" class="bg-yellow-500 text-blue-950 px-4 py-1 rounded-full font-black animate-pulse">Admission</button>
+            <button onclick="showSec('facilities')" class="nav-btn text-white font-bold transition uppercase">Facilities</button>
+            <button onclick="showSec('contact')" class="nav-btn text-white font-bold transition uppercase">Contact</button>
+        </div>
+    </nav>
+
+    <!-- 4. CONTENT AREA -->
+    <main class="container mx-auto p-4 md:p-8">
+        
+        <!-- HOME SECTION -->
+        <section id="home" class="section-content">
+            <!-- PHOTO SLIDER INTEGRATED -->
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white mb-10">
+                <img src="https://i.ibb.co/wNy2Wt7n/school-photo.jpg" class="slider-img active" alt="School Main View">
+                <!-- Aap yahan aur photos bhi add kar sakte hain -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+                    <h2 class="text-white text-3xl font-bold italic">Building the Foundation of Success</h2>
+                </div>
+            </div>
+
+            <article class="bg-white p-8 rounded-2xl shadow-lg border-t-8 border-blue-900 animate__animated animate__fadeInUp">
+                <h3 class="text-3xl font-bold text-blue-900 mb-4 text-center underline">Welcome to GPS Mahesra</h3>
+                <p class="text-gray-700 text-lg leading-relaxed text-center italic">
+                    "Glorious Public School, Mahesra (Hazaribag) ek aisa sansthan hai jahan bacho ke bhavishya ko nikhara jata hai. Hum shiksha ke sath-sath anushasan aur sanskar par vishesh dhyaan dete hain. Hamara uddeshya har bache ko ek kamyab insaan banana hai."
+                </p>
+                <div class="flex justify-center mt-6">
+                    <button onclick="showSec('admission')" class="bg-blue-900 text-white px-10 py-3 rounded-full font-bold hover:bg-yellow-500 transition">Next: Check Admissions →</button>
+                </div>
+            </article>
+        </section>
+
+        <!-- ADMISSION SECTION -->
+        <section id="admission" class="hidden section-content">
+            <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white p-10 rounded-3xl shadow-2xl">
+                <h2 class="text-5xl font-black text-yellow-400 mb-6 text-center">ADMISSION OPEN 2026</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-white/10 p-6 rounded-2xl border border-white/20">
+                        <h3 class="text-2xl font-bold mb-4">Classes: Nursery to 10th</h3>
+                        <p class="text-xl mb-4">💰 Admission Fee: <span class="bg-red-500 px-3 py-1 rounded font-bold uppercase">Free</span></p>
+                        <p class="text-xl">📅 Only Monthly Charges Apply</p>
+                    </div>
+                    <div class="bg-white/10 p-6 rounded-2xl border border-white/20">
+                        <h3 class="text-2xl font-bold mb-4">Residential Facilities</h3>
+                        <p class="text-lg">Hum bacho ke liye safe aur clean **Hostel facility** provide karte hain (Alag-alag Boys & Girls ke liye).</p>
                     </div>
                 </div>
-                <div class="bg-gray-100 p-8 rounded-2xl shadow-xl" data-aos="zoom-in">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-800 underline">School Highlights</h3>
-                    <ul class="space-y-3">
-                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i> 16 Modern Classrooms</li>
-                        <li><i class="fas fa-desktop text-blue-500 mr-2"></i> 86-inch AI Smartboards</li>
-                        <li><i class="fas fa-wifi text-yellow-500 mr-2"></i> Full Wi-Fi & Electricity</li>
-                        <li><i class="fas fa-book text-purple-500 mr-2"></i> Library with 1,065+ Books</li>
-                        <li><i class="fas fa-bus text-red-500 mr-2"></i> Easily Accessible (NH 522)</li>
-                    </ul>
+                <p class="text-center mt-8 text-2xl font-bold animate-bounce text-yellow-300">Enroll Your Child Today!</p>
+            </div>
+        </section>
+
+        <!-- FACILITIES SECTION -->
+        <section id="facilities" class="hidden section-content">
+             <h2 class="text-3xl font-bold text-blue-900 mb-8 border-b-2 inline-block">Features & Facilities</h2>
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow hover:bg-blue-900 hover:text-white transition cursor-pointer text-center font-bold">Safe Transport 🚌</div>
+                <div class="bg-white p-6 rounded-xl shadow hover:bg-blue-900 hover:text-white transition cursor-pointer text-center font-bold">Smart Classes 💻</div>
+                <div class="bg-white p-6 rounded-xl shadow hover:bg-blue-900 hover:text-white transition cursor-pointer text-center font-bold">Sports Ground ⚽</div>
+                <div class="bg-white p-6 rounded-xl shadow hover:bg-blue-900 hover:text-white transition cursor-pointer text-center font-bold">Hostel (B&G) 🏠</div>
+             </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-slate-900 text-white p-12 mt-20">
+        <div class="container mx-auto grid md:grid-cols-3 gap-10 text-center md:text-left">
+            <div>
+                <h4 class="text-yellow-400 font-bold text-xl mb-4 uppercase">Social Links</h4>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <a href="https://instagram.com/gpsmaheshra" class="hover:text-pink-500">Instagram</a>
+                    <a href="#" class="hover:text-blue-500">Facebook</a>
+                    <a href="#" class="hover:text-red-500">YouTube</a>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- 3. CONNECT / CONTACT SECTION -->
-    <section id="contact" class="py-20 bg-blue-900 text-white px-5">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-8" data-aos="fade-down">Connect With Us</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="p-6 border border-blue-700 rounded-lg" data-aos="flip-left">
-                    <i class="fas fa-map-marker-alt text-4xl mb-4 text-yellow-400"></i>
-                    <h4 class="text-xl font-bold mb-2">Location</h4>
-                    <p>Maheshra, Daru Block, Hazaribagh, Jharkhand (NH 522)</p>
-                </div>
-                <div class="p-6 border border-blue-700 rounded-lg" data-aos="flip-up">
-                    <i class="fas fa-phone-alt text-4xl mb-4 text-yellow-400"></i>
-                    <h4 class="text-xl font-bold mb-2">Call Us</h4>
-                    <p>Contact Office for Admissions</p>
-                </div>
-                <div class="p-6 border border-blue-700 rounded-lg" data-aos="flip-right">
-                    <i class="fas fa-envelope text-4xl mb-4 text-yellow-400"></i>
-                    <h4 class="text-xl font-bold mb-2">Social Media</h4>
-                    <p>Follow @gpsmahera on Instagram</p>
-                </div>
+            <div>
+                <h4 class="text-yellow-400 font-bold text-xl mb-4 uppercase">Contact Info</h4>
+                <p>Mahesra, Hazaribag (Jharkhand)</p>
+                <p class="mt-2">Privacy Policy: 100% Student Data Protection</p>
             </div>
-            <button class="mt-12 bg-white text-blue-900 font-bold py-3 px-10 rounded-full hover:bg-yellow-400 transition">Apply Now</button>
+            <div class="text-center md:text-right">
+                <p class="opacity-50">© 2026 Glorious Public School</p>
+                <p class="text-yellow-500 font-bold">Design for Excellence</p>
+            </div>
         </div>
-    </section>
-
-    <footer class="bg-gray-900 text-gray-500 py-6 text-center">
-        <p>&copy; 2026 Glorious Public School. Designed with Excellence.</p>
     </footer>
 
-    <!-- AOS Script for Animations -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true });
+        // INTRO ANIMATION TIMING
+        const overlay = document.getElementById('intro-overlay');
+        const t1 = document.getElementById('text1');
+        const t2 = document.getElementById('text2');
+
+        window.onload = () => {
+            setTimeout(() => { t1.style.display = 'block'; }, 500);
+            
+            setTimeout(() => {
+                t1.classList.replace('animate__zoomIn', 'animate__fadeOut');
+                setTimeout(() => {
+                    t1.style.display = 'none';
+                    t2.style.display = 'block';
+                }, 600);
+            }, 2500);
+
+            setTimeout(() => { overlay.classList.add('slide-up'); }, 5000);
+        };
+
+        // NAVIGATION LOGIC
+        function showSec(id) {
+            document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
+            const activeSec = document.getElementById(id);
+            activeSec.classList.remove('hidden');
+            activeSec.classList.add('animate__animated', 'animate__fadeIn');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
     </script>
 </body>
 </html>
